@@ -1,7 +1,6 @@
 node_modules/
 .idea/*
 *.bak
-sass/
-
 .DS_Store
 note.md
+.vscode/

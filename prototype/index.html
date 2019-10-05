@@ -9,9 +9,37 @@
             var editor = new PamEditor("demo");
         </script> -->
 
+        <!-- prototype -->
         <div id="demo" class="PamEditor">
-
-
+            <!-- toolbar -->
+            <div class="PamEditor-tool">
+                <ul class="toolbar">
+                    <button>changeScroll</button>
+                    <span></span>
+                    <button>Preview</button>
+                    <button>Edit</button>
+                </ul>
+                <ul class="toolbar">
+                    <button>changeScroll</button>
+                    <button>Preview</button>
+                    <button>Edit</button>
+                </ul>
+            </div>
+            <!-- editor -->
+            <div class="PamEditor-editor">
+                <div class="edit-block">
+                    <textarea class="editor"></textarea>
+                </div>
+                <div class="preview-block">
+                    <div class="preview"></div>
+                </div>
+                
+            </div>
+            <!-- status -->
+            <div class="PamEditor-status">
+                <span class="mode">status</span>
+                <span class="scroll">status</span>
+            </div>
         </div>
 
     </body>

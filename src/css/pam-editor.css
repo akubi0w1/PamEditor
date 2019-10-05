@@ -1,5 +1,112 @@
-.box {
-  width: 100px;
-  height: 100px;
-  background-color: #f00;
+body {
+  margin: 0;
+}
+
+.PamEditor {
+  text-align: center;
+  box-sizing: border-box;
+  margin: 10px;
+}
+
+.PamEditor-tool {
+  border: 2px solid #ddd;
+  border-top-left-radius: 0.3em;
+  border-top-right-radius: 0.3em;
+  text-align: left;
+}
+
+.PamEditor-tool .toolbar {
+  border-bottom: 1px solid #ddd;
+  list-style: none;
+  padding: .3em 0;
+  margin: 0;
+  padding-inline-start: 20px;
+}
+
+.PamEditor-tool .toolbar:last-child {
+  border-bottom: none;
+}
+
+.PamEditor-tool .toolbar button {
+  padding: .1em .4em;
+  border-radius: 0.3em;
+  margin: .1em;
+  border: none;
+  background-color: transparent;
+  font: 400 .9em normal;
+  outline: none;
+}
+
+.PamEditor-tool .toolbar button:hover {
+  background-color: #eee;
+}
+
+.PamEditor-tool .toolbar span {
+  border-right: 2px solid #ddd;
+  margin-right: .3em;
+}
+
+.PamEditor-editor {
+  border: 2px solid #ddd;
+  border-top-color: transparent;
+  border-bottom-left-radius: 0.3em;
+  border-bottom-right-radius: 0.3em;
+  text-align: left;
+  padding: .5em;
+  height: 320px;
+}
+
+.PamEditor-editor .edit-block {
+  display: inline-flex;
+  box-sizing: border-box;
+  width: 50%;
+  float: left;
+  padding: 0px 10px;
+}
+
+.PamEditor-editor .editor {
+  box-sizing: border-box;
+  border: 2px solid #ddd;
+  border-radius: 0.3em;
+  resize: none;
+  height: 320px;
+  width: 100%;
+  font: 400 16px normal;
+  padding: 10px;
+}
+
+.PamEditor-editor .preview-block {
+  display: inline-block;
+  box-sizing: border-box;
+  height: 320px;
+  width: 50%;
+}
+
+.PamEditor-editor .preview {
+  box-sizing: border-box;
+  height: 320px;
+  background-color: #eee;
+  border: 2px solid #ddd;
+  border-radius: 0.3em;
+  width: 100%;
+  padding: 10px;
+  overflow-y: scroll;
+  word-break: break-all;
+}
+
+.PamEditor-status {
+  text-align: right;
+  color: #888;
+}
+
+.PamEditor-status span {
+  margin-right: 10px;
+}
+
+.PamEditor-status .mode::before {
+  content: "mode: ";
+}
+
+.PamEditor-status .scroll::before {
+  content: "scroll: ";
 }
