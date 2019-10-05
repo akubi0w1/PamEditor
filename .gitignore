@@ -3,4 +3,5 @@ node_modules/
 *.bak
 sass/
 
-.DS_Store 
+.DS_Store
+note.md
