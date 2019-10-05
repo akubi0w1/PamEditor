@@ -3,6 +3,12 @@
     <head>
         <link rel="stylesheet" href="../src/css/pam-editor.css">
         <!-- <script type="text/javascript" src="./pam-editor.js"></script> -->
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+
+        <script src="./js/syncscroll.js" charset="utf-8"></script>
     </head>
     <body>
         <!-- <script type="text/javascript">
@@ -28,10 +34,10 @@
             <!-- editor -->
             <div class="PamEditor-editor">
                 <div class="edit-block">
-                    <textarea class="editor"></textarea>
+                    <textarea class="editor syncscroll" name="demo" onkeyup="renderPreview()"></textarea>
                 </div>
                 <div class="preview-block">
-                    <div class="preview"></div>
+                    <div class="preview syncscroll" name="demo"></div>
                 </div>
                 
             </div>
@@ -41,7 +47,15 @@
                 <span class="scroll">status</span>
             </div>
         </div>
-
+        
+        <!-- script -->
+        <script type="text/javascript">
+            function renderPreview () {
+                var text = document.querySelector("#demo .editor").value;
+                document.querySelector("#demo .preview").innerHTML = marked(text);
+            }
+            
+        </script>
     </body>
 
 </html>
