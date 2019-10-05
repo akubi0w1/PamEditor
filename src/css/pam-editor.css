@@ -18,9 +18,10 @@ body {
 .PamEditor-tool .toolbar {
   border-bottom: 1px solid #ddd;
   list-style: none;
-  padding: .3em 0;
+  padding: .2em 0;
   margin: 0;
   padding-inline-start: 20px;
+  padding-inline-end: 20px;
 }
 
 .PamEditor-tool .toolbar:last-child {
@@ -33,7 +34,7 @@ body {
   margin: .1em;
   border: none;
   background-color: transparent;
-  font: 400 .9em normal;
+  font: 400 1em normal;
   outline: none;
 }
 
@@ -42,8 +43,7 @@ body {
 }
 
 .PamEditor-tool .toolbar span {
-  border-right: 2px solid #ddd;
-  margin-right: .3em;
+  content: "|";
 }
 
 .PamEditor-editor {
@@ -85,7 +85,7 @@ body {
 .PamEditor-editor .preview {
   box-sizing: border-box;
   height: 320px;
-  background-color: #eee;
+  background-color: #eeeeee;
   border: 2px solid #ddd;
   border-radius: 0.3em;
   width: 100%;

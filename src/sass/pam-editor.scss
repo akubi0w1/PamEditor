@@ -1,7 +1,7 @@
 $flame-color: #ddd;
 $status-color: #888;
 $tool-hover-color: #eee;
-$preview-color: #eee;
+$preview-color: #eeeeee;
 
 $border-size: 2px;
 $border-radius: .3em;
@@ -25,9 +25,10 @@ body {
     .toolbar{
         border-bottom: 1px solid $flame-color;
         list-style: none;
-        padding: .3em 0;
+        padding: .2em 0;
         margin: 0;
         padding-inline-start: 20px;
+        padding-inline-end: 20px;
         &:last-child{
             border-bottom: none;
         }
@@ -37,15 +38,16 @@ body {
             margin: .1em;
             border: none;
             background-color: transparent;
-            font: 400 .9em normal;
+            font: 400 1em normal;
             outline: none;
             &:hover{
                 background-color: $tool-hover-color;
             }
         }
         span{
-            border-right: 2px solid $flame-color;
-            margin-right: .3em;
+            // border-right: 2px solid $flame-color;
+            // margin-right: .3em;
+            content: "|";
         }
     }
 }
