@@ -8,6 +8,41 @@ body {
   margin: 10px;
 }
 
+.PamEditor-toolbar {
+  border: 2px solid #ddd;
+  border-top-left-radius: 0.3em;
+  border-top-right-radius: 0.3em;
+  text-align: left;
+  padding: .2em 20px;
+  border-bottom: 2px solid #ddd;
+  list-style: none;
+  margin: 0;
+}
+
+.PamEditor-toolbar:last-child {
+  border-bottom: none;
+}
+
+.PamEditor-toolbar button {
+  color: #777;
+  padding: .1em .4em;
+  border-radius: 0.3em;
+  margin: .1em;
+  border: none;
+  background-color: transparent;
+  font: 400 1em normal;
+  outline: none;
+}
+
+.PamEditor-toolbar button:hover {
+  background-color: #eee;
+}
+
+.PamEditor-toolbar span {
+  color: #777;
+  content: "|";
+}
+
 .PamEditor-tool {
   border: 2px solid #ddd;
   border-top-left-radius: 0.3em;
