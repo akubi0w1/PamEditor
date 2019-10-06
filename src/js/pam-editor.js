@@ -1,29 +1,39 @@
-function PamEditor(elem, options) {
-    var editor = document.createElement("div");
-    editor.id = elem;
-    editor.className = "PamEditor";
-    document.body.appendChild(editor);
-    console.log(options.height);
+function PamEditor(id, options) {
+    // console.log(options.height);
 
-    this.render();
+    this.render(id);
 }
 
-PamEditor.prototype = {
-    render: function () {
-        this.createToolbar();
-    },
+PamEditor.prototype.render = function (id) {
+    // エディタのdiv作成
+    var editor = document.createElement("div");
+    editor.id = id;
+    editor.className = "PamEditor";
 
-    createToolbar: function () {
-        tools = [
-            "bold", "italic", "delete",
-        ];
+    // setting toolbar
+    var toolbar = this.createToolbar();
+    editor.appendChild(toolbar);
 
-        // toolbarの生成？
-        var toolBlock = document.createElement("div");
-        toolBlock.className = "PamEditor-tools";
+    // render
+    document.body.appendChild(editor);
+}
 
-        const setToolbar = tools.map(tool => {
-            document
-        });
-    },
+PamEditor.prototype.createToolbar = function () {
+    tools = [
+        "bold", "italic", "delete", "|", "preview",
+    ];
+
+    // toolbarの生成
+    var toolbar = document.createElement("div");
+    toolbar.className = "PamEditor-toolbar";
+    const setToolbar = tools.map(tool => {
+        if (tool === "|") {
+            var elem = document.createElement("span");
+        } else {
+            var elem = document.createElement("button");
+            elem.innerHTML = tool;
+        }
+        toolbar.appendChild(elem);
+    });
+    return toolbar
 }
