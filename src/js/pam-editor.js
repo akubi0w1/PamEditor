@@ -1,3 +1,5 @@
+var marked = require('marked');
+
 function PamEditor(id, options) {
     // console.log(options.height);
     var editor = document.createElement("div");
@@ -23,10 +25,10 @@ PamEditor.prototype.render = function () {
 
     // render
     document.body.appendChild(this.editor);
-}
+};
 
 PamEditor.prototype.createToolbar = function () {
-    tools = [
+    const tools = [
         "bold", "italic", "delete", "|", "preview",
     ];
 
@@ -34,7 +36,7 @@ PamEditor.prototype.createToolbar = function () {
     var toolbar = document.createElement("div");
     toolbar.className = "PamEditor-toolbar";
     const setToolbar = tools.map(tool => {
-        if (tool === "|") {
+            if (tool === "|") {
             var elem = document.createElement("span");
         } else {
             var elem = document.createElement("button");
@@ -43,7 +45,7 @@ PamEditor.prototype.createToolbar = function () {
         toolbar.appendChild(elem);
     });
     return toolbar
-}
+};
 
 PamEditor.prototype.createEditor = function () {
     // editorの生成
@@ -61,7 +63,7 @@ PamEditor.prototype.createEditor = function () {
     return editor
 
 
-}
+};
 
 PamEditor.prototype.createEditBlock = function () {
     // edit-blockの生成
@@ -74,7 +76,7 @@ PamEditor.prototype.createEditBlock = function () {
 
     editBlock.appendChild(editArea);
     return editBlock;
-}
+};
 
 PamEditor.prototype.createPreviewBlock = function () {
     var previewBlock = document.createElement("div");
@@ -86,10 +88,10 @@ PamEditor.prototype.createPreviewBlock = function () {
 
     previewBlock.appendChild(previewArea);
     return previewBlock;
-}
+};
 
 PamEditor.prototype.createStatus = function () {
-    st = {
+    const st = {
         mode: "sidebyside",
         scroll: "syncro",
     };
@@ -105,4 +107,17 @@ PamEditor.prototype.createStatus = function () {
         statusbar.appendChild(elem);
     }
     return statusbar;
-}
+};
+
+PamEditor.prototype.settingMarkdown = function() {
+    if(marked){
+        console.log("true");
+    }
+    // setting option
+
+    // setting highlight js
+
+    // render?
+};
+
+module.exports = PamEditor;
