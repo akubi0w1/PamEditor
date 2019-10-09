@@ -91,8 +91,8 @@ body {
 }
 
 .PamEditor-editor .edit-block {
+  display: none;
   border-right: 2px solid #ddd;
-  position: relative;
   box-sizing: border-box;
   width: 50%;
   padding: .5em 10px;
@@ -110,6 +110,7 @@ body {
 }
 
 .PamEditor-editor .preview-block {
+  display: none;
   padding: .5em 10px;
   position: absolute;
   left: 50%;
@@ -124,6 +125,18 @@ body {
   overflow-y: scroll;
   word-break: break-all;
   padding: 10px;
+}
+
+.PamEditor-editor .only {
+  display: block;
+  width: 100%;
+  left: 0;
+  position: relative;
+}
+
+.PamEditor-editor .side {
+  display: block;
+  width: 50%;
 }
 
 .PamEditor-status {

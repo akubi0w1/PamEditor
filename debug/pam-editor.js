@@ -1804,23 +1804,48 @@ function toggleBold() {
     console.log("toggle bold");
 }
 
-function toggleEditor() {
-    console.log("toggleEditor");
+function toggleEditor(editor) {
+    var elem = document.querySelector("#" + editor.id + " .edit-block");
+    if(elem.className.indexOf("only") > -1) {
+        return
+    }
+    elem.className = "edit-block only";
+    elem = document.querySelector("#" + editor.id + " .preview-block");
+    elem.className = "preview-block";
+    document.querySelector("#" + editor.id + " .mode").textContent = "edit";
 }
 
-function togglePreview () {
-    console.log("togglePreview");
+function togglePreview (editor) {
+    var elem = document.querySelector("#" + editor.id + " .preview-block");
+    if(elem.className.indexOf("only") > -1) {
+        return
+    }
+    elem.className = "preview-block only";
+    elem = document.querySelector("#" + editor.id + " .edit-block");
+    elem.className = "edit-block";
+
+    // set mode
+    document.querySelector("#" + editor.id + " .mode").textContent = "preview";
 }
 
-function toggleSideBySide () {
-    console.log("toggle side by side");
+function toggleSideBySide (editor) {
+    var elem = document.querySelector("#" + editor.id + " .edit-block");
+    if (elem.className.indexOf("side") > -1) {
+        return
+    }
+    elem.className = "edit-block side";
+    elem = document.querySelector("#" + editor.id + " .preview-block");
+    elem.className = "preview-block side";
+
+    document.querySelector("#" + editor.id + " .mode").textContent = "sidebyside";
+    
 }
 
 
-function renderPreview (id) {
-    var text = document.querySelector("#" + id + " .editor").value;
-    document.querySelector("#" + id + " .preview").innerHTML = marked(text);
-}
+// function renderPreview (id) {
+//     var text = document.querySelector("#" + id + " .editor").value;
+//     document.querySelector("#" + id + " .preview").innerHTML = marked(text);
+// }
 
 
 // editor
@@ -1835,19 +1860,21 @@ function PamEditor(id, options) {
     this.initMarkdown();
 
     // editorのレンダリング
-    this.render(id);
+    this.render();
+    this.initPreview()
 
-    //renderPreview(id);
-    renderPreview(id);
+    // setting live preview
+    document.querySelector("#" + id + " .editor").onkeyup = this.renderPreview;
+    
 }
 
-PamEditor.prototype.render = function (id) {
+PamEditor.prototype.render = function () {
     // setting toolbar
     var toolbar = this.createToolbar();
     this.editor.appendChild(toolbar);
 
     // setting editor
-    var editor = this.createEditor(id);
+    var editor = this.createEditor();
     this.editor.appendChild(editor);
 
     // setting status
@@ -1866,6 +1893,7 @@ PamEditor.prototype.createToolbar = function () {
         "toggle-side-by-side", "toggle-editor", "toggle-preview"
     ];
 
+    var editor = this.editor;
 
     // toolbarの生成
     var toolbar = document.createElement("div");
@@ -1876,7 +1904,7 @@ PamEditor.prototype.createToolbar = function () {
             elem.innerHTML = tool;
         } else {
             var elem = document.createElement("button");
-            elem.onclick = toolset[tool].action;
+            elem.onclick = function(){toolset[tool].action(editor);};
             elem.innerHTML = '<i class="' + toolset[tool].className + '"></i>';
         }
         toolbar.appendChild(elem);
@@ -1884,17 +1912,17 @@ PamEditor.prototype.createToolbar = function () {
     return toolbar
 };
 
-PamEditor.prototype.createEditor = function (id) {
+PamEditor.prototype.createEditor = function () {
     // editorの生成
     var editor = document.createElement("div");
     editor.className = "PamEditor-editor";
-    
+
     // edit block
-    var editBlock = this.createEditBlock(id);
+    var editBlock = this.createEditBlock(this.editor.id);
     editor.appendChild(editBlock);
 
     // preview block
-    var previewBlock = this.createPreviewBlock(id);
+    var previewBlock = this.createPreviewBlock(this.editor.id);
     editor.appendChild(previewBlock);
 
     return editor
@@ -1902,28 +1930,27 @@ PamEditor.prototype.createEditor = function (id) {
 
 };
 
-PamEditor.prototype.createEditBlock = function (id) {
+PamEditor.prototype.createEditBlock = function () {
     // edit-blockの生成
     var editBlock = document.createElement("div");
-    editBlock.className = "edit-block";
+    editBlock.className = "edit-block side";
 
     var editArea = document.createElement("textarea");
     editArea.className = "editor syncscroll";
-    editArea.title = id;
-    editArea.onkeyup = function(){renderPreview(id)};
+    editArea.title = this.editor.id;
 
     editBlock.appendChild(editArea);
     return editBlock;
 };
 
-PamEditor.prototype.createPreviewBlock = function (id) {
+PamEditor.prototype.createPreviewBlock = function () {
     var previewBlock = document.createElement("div");
-    previewBlock.className = "preview-block";
+    previewBlock.className = "preview-block side";
 
     // TODO: name
     var previewArea = document.createElement("div");
     previewArea.className = "preview syncscroll";
-    previewArea.title = id;
+    previewArea.title = this.editor.id;
 
     previewBlock.appendChild(previewArea);
     return previewBlock;
@@ -1968,6 +1995,27 @@ PamEditor.prototype.initMarkdown = function() {
         // render?
     }
 };
+
+PamEditor.prototype.initPreview = function () {
+    var id = this.editor.id;
+    var text = document.querySelector("#" + id + " .editor").value;
+    document.querySelector("#" + id + " .preview").innerHTML = marked(text);
+}
+
+PamEditor.prototype.renderPreview = function () {
+    var id = this.title;
+    document.querySelector("#" + id + " .preview").innerHTML = marked(this.value);
+}
+
+// bind
+PamEditor.toggleEditor = toggleEditor;
+
+
+PamEditor.prototype.toggleEditor = function () {
+    console.log(this);
+}
+
+
 
 module.exports = PamEditor;
 },{"marked":1}]},{},[2])(2)
