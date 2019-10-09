@@ -1,0 +1,44 @@
+.PamEditor .preview h1, .PamEditor .preview h2, .PamEditor .preview h3, .PamEditor .preview h4, .PamEditor .preview h5, .PamEditor .preview h6 {
+  margin-top: 1.5em;
+  margin-bottom: 16px;
+}
+
+.PamEditor .preview h1, .PamEditor .preview h2, .PamEditor .preview h3 {
+  border-bottom: 1px solid #ccc;
+}
+
+.PamEditor .preview p {
+  line-height: 1.8;
+}
+
+.PamEditor .preview table {
+  border: 1px solid #ccc;
+  border-spacing: 0;
+}
+
+.PamEditor .preview table thead {
+  background-color: #eee;
+}
+
+.PamEditor .preview table tr:nth-child(2n) {
+  background-color: #eee;
+}
+
+.PamEditor .preview table th, .PamEditor .preview table td {
+  padding: .2em .5em;
+  border: 1px solid #ccc;
+}
+
+.PamEditor .preview code {
+  padding: .1em .6em;
+  background-color: #eee;
+  color: #b83442;
+  font: 400 15px normal;
+  font-family: Menlo,Consolas,'DejaVu Sans Mono',monospace;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.PamEditor .preview > :first-child {
+  margin-top: 0;
+}

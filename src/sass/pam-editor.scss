@@ -2,7 +2,8 @@ $flame-color: #ddd;
 $status-color: #888;
 $tool-hover-color: #eee;
 $preview-color: #eeeeee;
-$tool-color: #777;
+$tool-color: #888;
+$tool-sep-color: #ccc;
 
 $border-size: 2px;
 $border-radius: .3em;
@@ -34,19 +35,19 @@ body {
     }
     button {
         color: $tool-color;
-        padding: .1em .4em;
+        padding: .1em .5em;
         border-radius: $border-radius;
         margin: .1em;
         border: none;
         background-color: transparent;
-        font: 400 1em normal;
+        font: 400 1.1em normal;
         outline: none;
         &:hover{
             background-color: $tool-hover-color;
         }
     }
     span{
-        color: $tool-color;
+        color: $tool-sep-color;
         // border-right: 2px solid $flame-color;
         // margin-right: .3em;
         content: "|";
@@ -88,54 +89,96 @@ body {
     }
 }
 
+// .PamEditor-editor {
+//     border: $border-size solid $flame-color;
+//     border-top-color: transparent;
+//     border-bottom-left-radius: $border-radius;
+//     border-bottom-right-radius: $border-radius;
+//     text-align: left;
+//     // padding: .5em;
+//     // height: $editor-height;
+//     // box-sizing: border-box;
+//     .edit-block{
+//         display: inline-flex;
+//         box-sizing: border-box;
+//         // height: $editor-height;
+//         width: 50%;
+//         float: left;
+//         // background-color: red;
+//         padding: .5em 10px;
+//     }
+//     .editor{
+//         box-sizing: border-box;
+//         border: 2px solid $flame-color;
+//         border-radius: $border-radius;
+//         resize: none;
+//         height: $editor-height;
+//         width: 100%;
+//         // outline: none;
+//         font: 400 16px normal;
+//         padding: 10px;
+//     }
+//     .preview-block{
+//         display: inline-block;
+//         box-sizing: border-box;
+//         height: $editor-height;
+//         width: 50%;
+//         // float: left;
+//         // background-color: blue;
+//     }
+//     .preview{
+//         // display: inline-block;
+//         box-sizing: border-box;
+//         height: $editor-height;
+//         // background-color: $preview-color;
+//         // border: 2px solid $flame-color;
+//         border-radius: $border-radius;
+//         width: 100%;
+//         padding: 10px;
+//         overflow-y: scroll;
+//         word-break: break-all;
+//     }
+// }
+
 .PamEditor-editor {
     border: $border-size solid $flame-color;
     border-top-color: transparent;
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     text-align: left;
-    padding: .5em;
-    height: $editor-height;
-    // box-sizing: border-box;
+    position: relative;
     .edit-block{
-        display: inline-flex;
+        border-right: 2px solid $flame-color;
+        position: relative;
         box-sizing: border-box;
-        // height: $editor-height;
         width: 50%;
-        float: left;
-        // background-color: red;
-        padding: 0px 10px;
+        padding: .5em 10px;
     }
     .editor{
+        // display: inline-block;
         box-sizing: border-box;
         border: 2px solid $flame-color;
         border-radius: $border-radius;
         resize: none;
-        height: $editor-height;
         width: 100%;
-        // outline: none;
+        height: $editor-height;
         font: 400 16px normal;
         padding: 10px;
     }
     .preview-block{
-        display: inline-block;
-        box-sizing: border-box;
-        height: $editor-height;
+        padding: .5em 10px;
+        position: absolute;
+        left: 50%;
+        top: 0;
         width: 50%;
-        // float: left;
-        // background-color: blue;
+        box-sizing: border-box;
     }
     .preview{
-        // display: inline-block;
-        box-sizing: border-box;
         height: $editor-height;
-        background-color: $preview-color;
-        border: 2px solid $flame-color;
-        border-radius: $border-radius;
-        width: 100%;
-        padding: 10px;
+        box-sizing: border-box;
         overflow-y: scroll;
         word-break: break-all;
+        padding: 10px;
     }
 }
 

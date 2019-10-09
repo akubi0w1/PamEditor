@@ -17,6 +17,9 @@ var banner = ["/**",
 " */",
 ""].join("\n");
 
+// browserify(files, [options]) = browserifyのインスタンス作成
+// b.bundle() = ファイルをbundleする．一つのjsファイルにまとめてくれる
+// browserify [file] > ? と同じかな
 function taskBrowserify(opts) {
     return browserify("./src/js/pam-editor.js", opts)
             .bundle()
@@ -25,10 +28,10 @@ function taskBrowserify(opts) {
 // browserify
 gulp.task("browserify:debug", function(){
     return taskBrowserify({debug:true, standalone:"PamEditor"})
-            .pipe(source("pam-editor.debug.js"))
-            .pipe(buffer())
-            .pipe(header(banner, {pkg:pkg}))
-            .pipe(gulp.dest("./debug/"));
+            .pipe(source("pam-editor.debug.js")) // vinylっていうオブジェクト(stream)に変換
+            .pipe(buffer()) // streamから，bufferに変換
+            .pipe(header(banner, {pkg:pkg})) // headerを貼って
+            .pipe(gulp.dest("./debug/")); // 書き出し
 });
 
 gulp.task("browserify", function(){
@@ -49,8 +52,8 @@ gulp.task("scripts",
                         .pipe(babel({
                             presets: ['@babel/env']
                         }))
-                        .pipe(concat("pam-editor.min.js"))
-                        .pipe(uglify())
+                        .pipe(concat("pam-editor.min.js")) // js_filesのものを，pam-editor.min.jsに連結
+                        .pipe(uglify()) // jsのminify化
                         .pipe(buffer())
                         .pipe(header(banner, {pkg:pkg}))
                         .pipe(gulp.dest("./dist/"))

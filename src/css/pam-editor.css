@@ -24,13 +24,13 @@ body {
 }
 
 .PamEditor-toolbar button {
-  color: #777;
-  padding: .1em .4em;
+  color: #888;
+  padding: .1em .5em;
   border-radius: 0.3em;
   margin: .1em;
   border: none;
   background-color: transparent;
-  font: 400 1em normal;
+  font: 400 1.1em normal;
   outline: none;
 }
 
@@ -39,7 +39,7 @@ body {
 }
 
 .PamEditor-toolbar span {
-  color: #777;
+  color: #ccc;
   content: "|";
 }
 
@@ -87,16 +87,15 @@ body {
   border-bottom-left-radius: 0.3em;
   border-bottom-right-radius: 0.3em;
   text-align: left;
-  padding: .5em;
-  height: 320px;
+  position: relative;
 }
 
 .PamEditor-editor .edit-block {
-  display: inline-flex;
+  border-right: 2px solid #ddd;
+  position: relative;
   box-sizing: border-box;
   width: 50%;
-  float: left;
-  padding: 0px 10px;
+  padding: .5em 10px;
 }
 
 .PamEditor-editor .editor {
@@ -104,29 +103,27 @@ body {
   border: 2px solid #ddd;
   border-radius: 0.3em;
   resize: none;
-  height: 320px;
   width: 100%;
+  height: 320px;
   font: 400 16px normal;
   padding: 10px;
 }
 
 .PamEditor-editor .preview-block {
-  display: inline-block;
-  box-sizing: border-box;
-  height: 320px;
+  padding: .5em 10px;
+  position: absolute;
+  left: 50%;
+  top: 0;
   width: 50%;
+  box-sizing: border-box;
 }
 
 .PamEditor-editor .preview {
-  box-sizing: border-box;
   height: 320px;
-  background-color: #eeeeee;
-  border: 2px solid #ddd;
-  border-radius: 0.3em;
-  width: 100%;
-  padding: 10px;
+  box-sizing: border-box;
   overflow-y: scroll;
   word-break: break-all;
+  padding: 10px;
 }
 
 .PamEditor-status {
