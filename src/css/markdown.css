@@ -39,6 +39,15 @@
   border-radius: 5px;
 }
 
+.PamEditor .preview blockquote {
+  color: #666;
+  border-left: 4px solid #ccc;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+  padding-inline-end: 40px;
+}
+
 .PamEditor .preview > :first-child {
   margin-top: 0;
 }

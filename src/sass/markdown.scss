@@ -9,6 +9,8 @@ $code-color: #b83442;
 
 $border-color: #ccc;
 
+$gray-color: #666;
+
 .PamEditor .preview {
     h1, h2, h3, h4, h5, h6 {
         margin-top: $header-margin-top;
@@ -42,6 +44,14 @@ $border-color: #ccc;
         font-family: Menlo,Consolas,'DejaVu Sans Mono',monospace;
         border: 1px solid $border-color;
         border-radius: 5px;
+    }
+    blockquote {
+        color: $gray-color;
+        border-left: 4px solid $border-color;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+        padding-inline-end: 40px;
     }
 
 }
