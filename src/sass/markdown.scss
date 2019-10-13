@@ -21,6 +21,15 @@ $gray-color: #666;
     }
     p {
         line-height: 1.8;
+        code {
+            padding: .1em .6em;
+            background-color: $code-bg-color;
+            color: $code-color;
+            font: 400 16px normal;
+            font-family: Menlo,Consolas,'DejaVu Sans Mono',monospace;
+            border: 1px solid $border-color;
+            border-radius: 5px;
+        }
     }
     table {
         border: 1px solid $border-color;
@@ -36,15 +45,6 @@ $gray-color: #666;
             border: 1px solid $border-color;
         }
     }
-    code {
-        padding: .1em .6em;
-        background-color: $code-bg-color;
-        color: $code-color;
-        font: 400 15px normal;
-        font-family: Menlo,Consolas,'DejaVu Sans Mono',monospace;
-        border: 1px solid $border-color;
-        border-radius: 5px;
-    }
     blockquote {
         color: $gray-color;
         border-left: 4px solid $border-color;
@@ -52,6 +52,17 @@ $gray-color: #666;
         margin-inline-end: 0px;
         padding-inline-start: 40px;
         padding-inline-end: 40px;
+    }
+
+    pre {
+        font-size: 16px;
+        code {
+            display: block;
+            overflow-x: auto;
+            padding: 0.5em;
+            color: #abb2bf;
+            background: #282c34;
+        }
     }
 
 }

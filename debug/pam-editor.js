@@ -2069,23 +2069,22 @@ PamEditor.prototype.createStatus = function () {
 };
 
 PamEditor.prototype.initMarkdown = function() {
-    
     if(marked){
         // setting option
         marked.setOptions({
-            // highlight: function(code) {
-            //     return require('highlight.js').highlightAuto(code).value;
-            // },
             pedantic: false,
             gfm: true,
             breaks: true,
-            sanitize: false,
+            sanitize: true,
             smartLists: true,
             smartypants: false,
-            xhtml: false
+            xhtml: false,
+            gfm: true,
+            tables: true,
+            highlight: function(code, lang) {
+                return window.hljs.highlightAuto(code).value;
+            },
         });
-
-        // render?
     }
 };
 
@@ -2098,6 +2097,8 @@ PamEditor.prototype.renderPreview = function () {
 PamEditor.prototype.renderLivePreview = function () {
     var id = this.title;
     document.querySelector("#" + id + " .preview").innerHTML = marked(this.value);
+    // console.log(document.querySelectorAll("pre code"));
+
 }
 
 module.exports = PamEditor;
