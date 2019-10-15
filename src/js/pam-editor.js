@@ -54,7 +54,7 @@ const toolset = {
     },
     "image": {
         text: "image",
-        action: "",
+        action: toggleImage,
         className: "far fa-image",
     },
     "code": {
@@ -82,7 +82,16 @@ const toolset = {
         action: togglePreview,
         className: "far fa-eye",
     },
-
+    "toggle-scroll-syncro": {
+        text: "toggle-scroll-syncro",
+        action: toggleScrollSyncro,
+        className: "fas fa-clone",
+    },
+    "toggle-scroll-separate": {
+        text: "toggle-scroll-separate",
+        action: toggleScrollSeparate,
+        className: "fas fa-pause",
+    },
 }
 
 // actions of toolbar
@@ -106,7 +115,6 @@ function textEntry (self, wordStart, wordEnd) {
 
 function toggleHeading(self) {
     if (!self) {return}
-    console.log("toggle headeing");
     return textEntry(self, "#", "");
 }
 
@@ -117,62 +125,57 @@ function toggleBold(self) {
 
 function toggleItalic(self) {
     if (!self) {return}
-    console.log("toggle italic");
     return textEntry(self, "*", "*");
 }
 
 function toggleStrikethrough(self) {
     if (!self) {return}
-    console.log("toggle strike");
     return textEntry(self, "~", "~");
 }
 
 function toggleLink(self) {
     if (!self) {return}
-    console.log("toggle link");
     return textEntry(self, "[text](url)", "");
 }
 
 function toggleQuote(self) {
     if (!self) {return}
-    console.log("toggle quote");
     return textEntry(self, ">", "");
 }
 
 function toggleHorizon(self) {
     if (!self) {return}
-    console.log("toggle horizon");
     return textEntry(self, "---", "");
 }
 
 function toggleUnorderedList(self) {
     if (!self) {return}
-    console.log("toggle ul");
     return textEntry(self, "- ", "");
 }
 
 function toggleOrderedList(self) {
     if (!self) {return}
-    console.log("toggle ol");
     return textEntry(self, "1. ", "");
 }
 
 function toggleTable(self) {
     if (!self) { return }
-    console.log("toggle table");
     var text = "| head | head | head |\n|:---:|:---:|:---:|\n| body | body | body |\n";
     return textEntry(self, text, "");
 }
 
+function toggleImage(self) {
+    if (!self) { return }
+    return textEntry(self, "![text](url)", "")
+}
+
 function toggleCode(self) {
     if (!self) {return}
-    console.log("toggle code");
     return textEntry(self, "`", "`");
 }
 
 function toggleCodeBlock(self) {
     if (!self) {return}
-    console.log("toggle code block");
     return textEntry(self, "```\n", "\n```");
 }
 
@@ -224,26 +227,54 @@ function togglePreview (self) {
     document.querySelector("#" + editor.id + " .mode").textContent = "preview";
 }
 
+function toggleScrollSyncro (self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .editor");
+    if(elem.className.indexOf("syncscroll") > -1) {
+        return;
+    }
+    elem.className = "editor syncscroll";
+    elem = document.querySelector("#" + editor.id + " .preview");
+    elem.className = "preview syncscroll";
+    syncscroll.reset();
+
+    document.querySelector("#" + editor.id + " .scroll").textContent = "syncro";
+}
+
+function toggleScrollSeparate (self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .editor");
+    if(elem.className.indexOf("syncscroll") <= -1) {
+        return;
+    }
+    elem.className = "editor";
+    elem = document.querySelector("#" + editor.id + " .preview");
+    elem.className = "preview";
+    syncscroll.reset();
+
+    document.querySelector("#" + editor.id + " .scroll").textContent = "separate";
+}
+
 
 // editor
 function PamEditor(id, options) {
-    // console.log(options.height);
     var editor = document.createElement("div");
     editor.id = id;
     editor.className = "PamEditor";
     this.editor = editor;
 
-    // markedのoptionを設定
+    // setting marked
     this.initMarkdown();
 
-    // editorのレンダリング
+    // render preview
     this.render();
     this.renderPreview()
 
     // setting live preview
     document.querySelector("#" + id + " .editor").onkeyup = this.renderLivePreview;
-    
-    // test
+
 }
 
 PamEditor.prototype.render = function () {
@@ -268,7 +299,8 @@ PamEditor.prototype.createToolbar = function () {
         "heading", "bold", "italic", "strikethrough", "|",
         "link", "quote", "horizon", "|", "unordered-list", "ordered-list", "table", "image", "|",
         "code", "code-block", "|",
-        "toggle-side-by-side", "toggle-editor", "toggle-preview"
+        "toggle-side-by-side", "toggle-editor", "toggle-preview", "|",
+        "toggle-scroll-syncro", "toggle-scroll-separate"
     ];
 
     var self = this;
@@ -276,7 +308,7 @@ PamEditor.prototype.createToolbar = function () {
     // toolbarの生成
     var toolbar = document.createElement("div");
     toolbar.className = "PamEditor-toolbar";
-    const setToolbar = tools.map(tool => {
+    tools.map(tool => {
             if (tool === "|") {
             var elem = document.createElement("span");
             elem.innerHTML = tool;
@@ -304,8 +336,6 @@ PamEditor.prototype.createEditor = function () {
     editor.appendChild(previewBlock);
 
     return editor
-
-
 };
 
 PamEditor.prototype.createEditBlock = function () {
@@ -325,7 +355,6 @@ PamEditor.prototype.createPreviewBlock = function () {
     var previewBlock = document.createElement("div");
     previewBlock.className = "preview-block side";
 
-    // TODO: name
     var previewArea = document.createElement("div");
     previewArea.className = "preview syncscroll";
     previewArea.title = this.editor.id;
@@ -382,7 +411,6 @@ PamEditor.prototype.renderPreview = function () {
 PamEditor.prototype.renderLivePreview = function () {
     var id = this.title;
     document.querySelector("#" + id + " .preview").innerHTML = marked(this.value);
-    // console.log(document.querySelectorAll("pre code"));
 
 }
 
