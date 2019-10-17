@@ -1714,6 +1714,24 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
 var marked = require('marked');
+var syncscroll = require('./syncscroll');
+
+// default values of options
+const defaultOptions = {
+    width: "100%",
+    height: "512px",
+    tools: [
+        "heading", "bold", "italic", "strikethrough", "|",
+        "link", "quote", "horizon", "|", "unordered-list", "ordered-list", "table", "image", "|",
+        "code", "code-block", "|",
+        "toggle-side-by-side", "toggle-editor", "toggle-preview", "|",
+        "toggle-scroll-syncro", "toggle-scroll-separate"
+    ],
+    status: [
+        "mode",
+        "scroll",
+    ],
+};
 
 // items and functions of toolbar
 const toolset = {
@@ -1972,13 +1990,16 @@ function toggleScrollSeparate (self) {
     document.querySelector("#" + editor.id + " .scroll").textContent = "separate";
 }
 
-
 // editor
 function PamEditor(id, options) {
     var editor = document.createElement("div");
     editor.id = id;
     editor.className = "PamEditor";
     this.editor = editor;
+    this.options = {};
+    if(options) {
+        this.options = options;
+    }
 
     // setting marked
     this.initMarkdown();
@@ -1990,7 +2011,32 @@ function PamEditor(id, options) {
     // setting live preview
     document.querySelector("#" + id + " .editor").onkeyup = this.renderLivePreview;
 
+    // options
+    this.setOptions();
+
 }
+
+PamEditor.prototype.setOptions = function () {
+    // width
+    if(this.options.width) {
+        document.getElementById(this.editor.id).style.width = this.options.width;
+    }
+    
+    // height
+    if(!this.editor.style.height && this.options.height) {
+        document.querySelector("#" + this.editor.id + " .editor").style.height = this.options.height;
+        document.querySelector("#" + this.editor.id + " .preview").style.height = this.options.height;
+    }
+
+    // status
+    if (!this.options.status) {
+        this.options.status = defaultOptions.status;
+    }
+    this.options.status.map(status => {
+        document.querySelector("#" + this.editor.id + " ." + status).style.display = "inline-block";
+    });
+}
+
 
 PamEditor.prototype.render = function () {
     // setting toolbar
@@ -2010,13 +2056,11 @@ PamEditor.prototype.render = function () {
 };
 
 PamEditor.prototype.createToolbar = function () {
-    const tools = [
-        "heading", "bold", "italic", "strikethrough", "|",
-        "link", "quote", "horizon", "|", "unordered-list", "ordered-list", "table", "image", "|",
-        "code", "code-block", "|",
-        "toggle-side-by-side", "toggle-editor", "toggle-preview", "|",
-        "toggle-scroll-syncro", "toggle-scroll-separate"
-    ];
+    // setting tools
+    var tools = defaultOptions.tools;
+    if(this.options.tools) {
+        tools = this.options.tools;
+    }
 
     var self = this;
 
@@ -2130,5 +2174,145 @@ PamEditor.prototype.renderLivePreview = function () {
 }
 
 module.exports = PamEditor;
-},{"marked":1}]},{},[2])(2)
+},{"./syncscroll":3,"marked":1}],3:[function(require,module,exports){
+/**
+ * @fileoverview syncscroll - scroll several areas simultaniously
+ * @version 0.0.3
+ * 
+ * @license MIT, see http://github.com/asvd/intence
+ * @copyright 2015 asvd <heliosframework@gmail.com> 
+ */
+
+ 
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['exports'], factory);
+    } else if (typeof exports !== 'undefined') {
+        factory(exports);
+    } else {
+        factory((root.syncscroll = {}));
+    }
+}(this,function (exports) {
+    var Width = 'Width';
+    var Height = 'Height';
+    var Top = 'Top';
+    var Left = 'Left';
+    var scroll = 'scroll';
+    var client = 'client';
+    var EventListener = 'EventListener';
+    var addEventListener = 'add' + EventListener;
+    var length = 'length';
+    var Math_round = Math.round;
+
+    var names = {};
+
+    var reset = function() {
+        var elems = document.getElementsByClassName('sync'+scroll);
+
+        // clearing existing listeners
+        var i, j, el, found, name;
+        for (name in names) {
+            if (names.hasOwnProperty(name)) {
+                for (i = 0; i < names[name][length]; i++) {
+                    names[name][i]['remove'+EventListener](
+                        scroll, names[name][i].syn, 0
+                    );
+                }
+            }
+        }
+
+        // setting-up the new listeners
+        for (i = 0; i < elems[length];) {
+            found = j = 0;
+            el = elems[i++];
+            if (!(name = el.getAttribute('title'))) {
+                // name attribute is not set
+                continue;
+            }
+
+            el = el[scroll+'er']||el;  // needed for intence
+
+            // searching for existing entry in array of names;
+            // searching for the element in that entry
+            for (;j < (names[name] = names[name]||[])[length];) {
+                found |= names[name][j++] == el;
+            }
+
+            if (!found) {
+                names[name].push(el);
+            }
+
+            el.eX = el.eY = 0;
+
+            (function(el, name) {
+                el[addEventListener](
+                    scroll,
+                    el.syn = function() {
+                        var elems = names[name];
+
+                        var scrollX = el[scroll+Left];
+                        var scrollY = el[scroll+Top];
+
+                        var xRate =
+                            scrollX /
+                            (el[scroll+Width] - el[client+Width]);
+                        var yRate =
+                            scrollY /
+                            (el[scroll+Height] - el[client+Height]);
+
+                        var updateX = scrollX != el.eX;
+                        var updateY = scrollY != el.eY;
+
+                        var otherEl, i = 0;
+
+                        el.eX = scrollX;
+                        el.eY = scrollY;
+
+                        for (;i < elems[length];) {
+                            otherEl = elems[i++];
+                            if (otherEl != el) {
+                                if (updateX &&
+                                    Math_round(
+                                        otherEl[scroll+Left] -
+                                        (scrollX = otherEl.eX =
+                                         Math_round(xRate *
+                                             (otherEl[scroll+Width] -
+                                              otherEl[client+Width]))
+                                        )
+                                    )
+                                ) {
+                                    otherEl[scroll+Left] = scrollX;
+                                }
+                                
+                                if (updateY &&
+                                    Math_round(
+                                        otherEl[scroll+Top] -
+                                        (scrollY = otherEl.eY =
+                                         Math_round(yRate *
+                                             (otherEl[scroll+Height] -
+                                              otherEl[client+Height]))
+                                        )
+                                    )
+                                ) {
+                                    otherEl[scroll+Top] = scrollY;
+                                }
+                            }
+                        }
+                    }, 0
+                );
+            })(el, name);
+        }
+    }
+    
+       
+    if (document.readyState == "complete") {
+        reset();
+    } else {
+        window[addEventListener]("load", reset, 0);
+    }
+
+    exports.reset = reset;
+}));
+
+},{}]},{},[2])(2)
 });

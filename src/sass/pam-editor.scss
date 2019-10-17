@@ -7,7 +7,7 @@ $tool-sep-color: #ccc;
 
 $border-size: 2px;
 $border-radius: .3em;
-$editor-height: 320px;
+$editor-height: 512px;
 
 body {
     margin: 0;
@@ -143,6 +143,7 @@ body {
     text-align: right;
     color: $status-color;
     span{
+        display: none;
         margin-right: 10px;
     }
     .mode::before{

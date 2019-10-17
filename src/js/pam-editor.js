@@ -1,4 +1,22 @@
 var marked = require('marked');
+var syncscroll = require('./syncscroll');
+
+// default values of options
+const defaultOptions = {
+    width: "100%",
+    height: "512px",
+    tools: [
+        "heading", "bold", "italic", "strikethrough", "|",
+        "link", "quote", "horizon", "|", "unordered-list", "ordered-list", "table", "image", "|",
+        "code", "code-block", "|",
+        "toggle-side-by-side", "toggle-editor", "toggle-preview", "|",
+        "toggle-scroll-syncro", "toggle-scroll-separate"
+    ],
+    status: [
+        "mode",
+        "scroll",
+    ],
+};
 
 // items and functions of toolbar
 const toolset = {
@@ -257,13 +275,16 @@ function toggleScrollSeparate (self) {
     document.querySelector("#" + editor.id + " .scroll").textContent = "separate";
 }
 
-
 // editor
 function PamEditor(id, options) {
     var editor = document.createElement("div");
     editor.id = id;
     editor.className = "PamEditor";
     this.editor = editor;
+    this.options = {};
+    if(options) {
+        this.options = options;
+    }
 
     // setting marked
     this.initMarkdown();
@@ -275,7 +296,32 @@ function PamEditor(id, options) {
     // setting live preview
     document.querySelector("#" + id + " .editor").onkeyup = this.renderLivePreview;
 
+    // options
+    this.setOptions();
+
 }
+
+PamEditor.prototype.setOptions = function () {
+    // width
+    if(this.options.width) {
+        document.getElementById(this.editor.id).style.width = this.options.width;
+    }
+    
+    // height
+    if(!this.editor.style.height && this.options.height) {
+        document.querySelector("#" + this.editor.id + " .editor").style.height = this.options.height;
+        document.querySelector("#" + this.editor.id + " .preview").style.height = this.options.height;
+    }
+
+    // status
+    if (!this.options.status) {
+        this.options.status = defaultOptions.status;
+    }
+    this.options.status.map(status => {
+        document.querySelector("#" + this.editor.id + " ." + status).style.display = "inline-block";
+    });
+}
+
 
 PamEditor.prototype.render = function () {
     // setting toolbar
@@ -295,13 +341,11 @@ PamEditor.prototype.render = function () {
 };
 
 PamEditor.prototype.createToolbar = function () {
-    const tools = [
-        "heading", "bold", "italic", "strikethrough", "|",
-        "link", "quote", "horizon", "|", "unordered-list", "ordered-list", "table", "image", "|",
-        "code", "code-block", "|",
-        "toggle-side-by-side", "toggle-editor", "toggle-preview", "|",
-        "toggle-scroll-syncro", "toggle-scroll-separate"
-    ];
+    // setting tools
+    var tools = defaultOptions.tools;
+    if(this.options.tools) {
+        tools = this.options.tools;
+    }
 
     var self = this;
 
