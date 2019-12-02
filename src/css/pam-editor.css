@@ -156,3 +156,39 @@ body {
 .PamEditor-status .scroll::before {
   content: "scroll: ";
 }
+
+.PamEditor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.PamEditor-modal .overlay {
+  display: flex;
+  box-sizing: border-box;
+  width: inherit;
+  height: inherit;
+  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.PamEditor-modal .container {
+  position: relative;
+  display: inline-flex;
+  box-sizing: border-box;
+  min-height: 300px;
+  background-color: #fff;
+  vertical-align: middle;
+  padding: 1.5em 1.8em;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+
+.PamEditor-modal .contents {
+  text-align: left;
+}

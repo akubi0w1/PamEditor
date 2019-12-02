@@ -6,3 +6,6 @@ note.md
 .vscode/
 prototype/js
 index.html
+
+ensime-langserver.log
+pc.stdout.log

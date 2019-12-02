@@ -16,6 +16,12 @@ const defaultOptions = {
         "mode",
         "scroll",
     ],
+    placeholder: [
+        "Please write markdown..."
+    ],
+    defaultText: [
+        ""
+    ],
 };
 
 // items and functions of toolbar
@@ -275,6 +281,8 @@ function toggleScrollSeparate (self) {
     document.querySelector("#" + editor.id + " .scroll").textContent = "separate";
 }
 
+// TODO: getBody, setBody?
+
 // editor
 function PamEditor(id, options) {
     var editor = document.createElement("div");
@@ -291,14 +299,14 @@ function PamEditor(id, options) {
 
     // render preview
     this.render();
-    this.renderPreview()
 
     // setting live preview
     document.querySelector("#" + id + " .editor").onkeyup = this.renderLivePreview;
 
     // options
     this.setOptions();
-
+    
+    this.renderPreview()
 }
 
 PamEditor.prototype.setOptions = function () {
@@ -320,6 +328,17 @@ PamEditor.prototype.setOptions = function () {
     this.options.status.map(status => {
         document.querySelector("#" + this.editor.id + " ." + status).style.display = "inline-block";
     });
+
+    // placeholder
+    if (!this.options.placeholder) {
+        this.options.placeholder = defaultOptions.placeholder;
+    }
+    document.querySelector("#" + this.editor.id + " .editor").placeholder = this.options.placeholder;
+
+    // default text
+    if (this.options.defaultText){
+        document.querySelector("#" + this.editor.id + " .editor").value = this.options.defaultText;
+    }
 }
 
 
@@ -457,5 +476,14 @@ PamEditor.prototype.renderLivePreview = function () {
     document.querySelector("#" + id + " .preview").innerHTML = marked(this.value);
 
 }
+
+PamEditor.prototype.getMarkdownText = function() {
+    return document.querySelector("#" + this.editor.id + " .editor").value;
+}
+
+PamEditor.prototype.getHtmlText = function() {
+    return marked(this.getMarkdownText());
+}
+
 
 module.exports = PamEditor;
