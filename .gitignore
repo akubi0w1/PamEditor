@@ -6,6 +6,7 @@ note.md
 .vscode/
 prototype/js
 index.html
+.ensime_cache/
 
 ensime-langserver.log
 pc.stdout.log

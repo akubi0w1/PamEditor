@@ -1,103 +1,98 @@
-var gulp = require('gulp'),
-    sass = require('gulp-sass'),
-    header = require('gulp-header'),
-    uglify = require('gulp-uglify'),
-    concat = require('gulp-concat'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
-    pkg = require('./package.json'),
-    browserify = require('browserify'),
-    babel = require('gulp-babel')
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const header = require('gulp-header');
+const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const browserify = require('browserify');
+const babel = require('gulp-babel');
+const del = require('del');
+const eslint = require('gulp-eslint');
+const pkg = require('./package.json');
 
-var banner = ["/**",
-" * <%= pkg.name %> v<%= pkg.version %>",
-" * Copyright <%= pkg.company %>",
-" * @link <%= pkg.homepage %>",
-" * @license <%= pkg.license %>",
-" */",
-""].join("\n");
+const banner = ['/**',
+' * <%= pkg.name %> v<%= pkg.version %>',
+' * Copyright <%= pkg.company %>',
+' * @link <%= pkg.homepage %>',
+' * @license <%= pkg.license %>',
+' */',
+''].join('\n');
+
+const paths = {
+    allSrcJs: 'src/js/**/*.js',
+    targetSrcJs: 'src/js/pam-editor.js',
+    gulpFile: 'gulpfile.js',
+    libDir: 'lib',
+    distDir: 'dist',
+};
 
 // browserify(files, [options]) = browserifyのインスタンス作成
 // b.bundle() = ファイルをbundleする．一つのjsファイルにまとめてくれる
 // browserify [file] > ? と同じかな
 function taskBrowserify(opts) {
-    return browserify("./src/js/pam-editor.js", opts)
-            .bundle()
+    return browserify(paths.targetSrcJs, opts)
+            .bundle();
 }
 
-// browserify
-gulp.task("browserify:debug", function(){
-    return taskBrowserify({debug:true, standalone:"PamEditor"})
-            .pipe(source("pam-editor.debug.js")) // vinylっていうオブジェクト(stream)に変換
-            .pipe(buffer()) // streamから，bufferに変換
-            .pipe(header(banner, {pkg:pkg})) // headerを貼って
-            .pipe(gulp.dest("./debug/")); // 書き出し
-});
-
-gulp.task("browserify", function(){
-    return taskBrowserify({standalone: "PamEditor"})
-            .pipe(source("pam-editor.js"))
-            .pipe(buffer())
-            .pipe(header(banner, {pkg:pkg}))
-            .pipe(gulp.dest("./debug/"))
-});
-
-gulp.task("scripts", 
-    gulp.series("browserify:debug",
-        gulp.series("browserify",
-            function() {
-                var js_files = ["./debug/pam-editor.js"];
-
-                return gulp.src(js_files)
-                        .pipe(babel({
-                            presets: ['@babel/env']
-                        }))
-                        .pipe(concat("pam-editor.min.js")) // js_filesのものを，pam-editor.min.jsに連結
-                        .pipe(uglify()) // jsのminify化
-                        .pipe(buffer())
-                        .pipe(header(banner, {pkg:pkg}))
-                        .pipe(gulp.dest("./dist/"))
-            }
-        )
-    )
+// clean
+gulp.task('clean', () =>
+    del([
+        paths.libDir,
+        paths.distDir,
+    ]),
 );
 
-gulp.task("babel", function(){
-    return gulp.src("./debug/pam-editor.js")
-            .pipe(babel({
-                presets: ['@babel/env']
-            }))
-            .pipe(gulp.dest("./dist/"));
-});
+// lint
+gulp.task('lint', () =>
+    gulp.src([
+        paths.targetSrcJs,
+        paths.gulpFile,
+    ])
+        .pipe(eslint({ fix: true }))
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+);
+
+// build: babelする
+gulp.task('build', gulp.series('lint', 'clean', () =>
+    gulp.src(paths.targetSrcJs)
+        .pipe(header(banner, { pkg }))
+        .pipe(babel())
+        .pipe(gulp.dest(paths.libDir))
+));
+
+// main: gen distribution
+gulp.task('main', gulp.series('lint', 'clean', () =>
+    taskBrowserify({ standalone: 'PamEditor' })
+        .pipe(source(paths.targetSrcJs))
+        .pipe(buffer())
+        .pipe(babel())
+        .pipe(concat('pam-editor.min.js'))
+        .pipe(uglify()) // jsのminify化
+        .pipe(header(banner, { pkg }))
+        .pipe(buffer())
+        .pipe(gulp.dest(paths.distDir))
+));
 
 // compile sass
-gulp.task("sass", function(){
-    return (
-        gulp.src("src/sass/**/*.scss")
-        .pipe(sass({outputStyle:"expanded"}))
-        .pipe(gulp.dest("./src/css"))
-    );
-});
+gulp.task('sass', () =>
+    gulp.src('src/sass/**/*.scss')
+        .pipe(sass({ outputStyle: 'expanded' }))
+        .pipe(gulp.dest('./src/css'))
+);
 
 // watch: compile sass
-gulp.task("sass-watch", function(){
-    return gulp.watch("src/sass/**/*.scss", function(){
-        return (
-            gulp.src("src/sass/**/*.scss")
-            .pipe(sass({outputStyle:"expanded"}).on("error", sass.logError))
-            .pipe(gulp.dest("./src/css"))
-        );
-    });
+gulp.task('sass-watch', () =>
+    gulp.watch('src/sass/**/*.scss', () =>
+        gulp.src('src/sass/**/*.scss')
+            .pipe(sass({ outputStyle: 'expanded' }).on('error', sass.logError))
+            .pipe(gulp.dest('./src/css'))
+));
+
+// js変更監視
+gulp.task('watch', () => {
+    gulp.watch(paths.allSrcJs, gulp.task('main'));
 });
 
-// 
-
-
-// gulp.task("browserify", () => {
-//     return (
-//         browserify('./src/js/pam-editor.js')
-//         .bundle()
-//         .pipe(source('bundle.js'))
-//         .pipe(gulp.dest('./dest/assets/js/'))
-//     );
-// });
+gulp.task('default', gulp.series('main', 'watch'));

@@ -16,13 +16,165 @@ const defaultOptions = {
         "mode",
         "scroll",
     ],
-    placeholder: [
-        "Please write markdown..."
-    ],
-    defaultText: [
-        ""
-    ],
+    placeholder: "Please write markdown...",
+    defaultText: "",
 };
+
+// actions of toolbar
+function textEntry (self, wordStart, wordEnd) {
+    var editor = self.editor
+    var textarea = document.querySelector("#" + editor.id + " .editor");
+
+    var sentence = textarea.value;
+    var len = sentence.length;
+    var cursorStart = textarea.selectionStart;
+    var cursorEnd = textarea.selectionEnd;
+
+    var before = sentence.slice(0, cursorStart);
+    var middle = sentence.slice(cursorStart, cursorEnd);
+    var after = sentence.slice(cursorEnd, len);
+
+    textarea.value = before + wordStart + middle + wordEnd + after;
+
+    self.renderPreview();
+}
+
+function toggleHeading(self) {
+    if (!self) { return }
+    return textEntry(self, "#", "");
+}
+
+function toggleBold(self) {
+    if (!self) { return }
+    return textEntry(self, "**", "**");
+}
+
+function toggleItalic(self) {
+    if (!self) { return }
+    return textEntry(self, "*", "*");
+}
+
+function toggleStrikethrough(self) {
+    if (!self) { return }
+    return textEntry(self, "~", "~");
+}
+
+function toggleLink(self) {
+    if (!self) { return }
+    return textEntry(self, "[text](url)", "");
+}
+
+function toggleQuote(self) {
+    if (!self) { return }
+    return textEntry(self, ">", "");
+}
+
+function toggleHorizon(self) {
+    if (!self) { return}
+    return textEntry(self, "---", "");
+}
+
+function toggleUnorderedList(self) {
+    if (!self) { return}
+    return textEntry(self, "- ", "");
+}
+
+function toggleOrderedList(self) {
+    if (!self) { return}
+    return textEntry(self, "1. ", "");
+}
+
+function toggleTable(self) {
+    if (!self) { return }
+    var text = "| head | head | head |\n|:---:|:---:|:---:|\n| body | body | body |\n";
+    return textEntry(self, text, "");
+}
+
+function toggleImage(self) {
+    if (!self) { return }
+    return textEntry(self, "![text](url)", "")
+}
+
+function toggleCode(self) {
+    if (!self) { return}
+    return textEntry(self, "`", "`");
+}
+
+function toggleCodeBlock(self) {
+    if (!self) { return}
+    return textEntry(self, "```\n", "\n```");
+}
+
+function toggleSideBySide (self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .edit-block");
+    if (elem.className.indexOf("side") > -1) {
+        return
+    }
+    elem.className = "edit-block side";
+    elem = document.querySelector("#" + editor.id + " .preview-block");
+    elem.className = "preview-block side";
+
+    document.querySelector("#" + editor.id + " .mode").textContent = "sidebyside";
+}
+
+function toggleEditor(self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .edit-block");
+    if(elem.className.indexOf("only") > -1) {
+        return
+    }
+    elem.className = "edit-block only";
+    elem = document.querySelector("#" + editor.id + " .preview-block");
+    elem.className = "preview-block";
+    document.querySelector("#" + editor.id + " .mode").textContent = "edit";
+}
+
+function togglePreview (self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .preview-block");
+    if(elem.className.indexOf("only") > -1) {
+        return
+    }
+    elem.className = "preview-block only";
+    elem = document.querySelector("#" + editor.id + " .edit-block");
+    elem.className = "edit-block";
+
+    document.querySelector("#" + editor.id + " .mode").textContent = "preview";
+}
+
+function toggleScrollSyncro (self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .editor");
+    if(elem.className.indexOf("syncscroll") > -1) {
+        return;
+    }
+    elem.className = "editor syncscroll";
+    elem = document.querySelector("#" + editor.id + " .preview");
+    elem.className = "preview syncscroll";
+    syncscroll.reset();
+
+    document.querySelector("#" + editor.id + " .scroll").textContent = "syncro";
+}
+
+function toggleScrollSeparate (self) {
+    if (!self) { return }
+    var editor = self.editor;
+    var elem = document.querySelector("#" + editor.id + " .editor");
+    if(elem.className.indexOf("syncscroll") <= -1) {
+        return;
+    }
+    elem.className = "editor";
+    elem = document.querySelector("#" + editor.id + " .preview");
+    elem.className = "preview";
+    syncscroll.reset();
+
+    document.querySelector("#" + editor.id + " .scroll").textContent = "separate";
+}
 
 // items and functions of toolbar
 const toolset = {
@@ -118,169 +270,6 @@ const toolset = {
     },
 }
 
-// actions of toolbar
-function textEntry (self, wordStart, wordEnd) {
-    var editor = self.editor
-    var textarea = document.querySelector("#" + editor.id + " .editor");
-
-    var sentence = textarea.value;
-    var len = sentence.length;
-    var cursorStart = textarea.selectionStart;
-    var cursorEnd = textarea.selectionEnd;
-
-    var before = sentence.slice(0, cursorStart);
-    var middle = sentence.slice(cursorStart, cursorEnd);
-    var after = sentence.slice(cursorEnd, len);
-
-    textarea.value = before + wordStart + middle + wordEnd + after;
-
-    self.renderPreview();
-}
-
-function toggleHeading(self) {
-    if (!self) {return}
-    return textEntry(self, "#", "");
-}
-
-function toggleBold(self) {
-    if (!self) {return}
-    return textEntry(self, "**", "**");
-}
-
-function toggleItalic(self) {
-    if (!self) {return}
-    return textEntry(self, "*", "*");
-}
-
-function toggleStrikethrough(self) {
-    if (!self) {return}
-    return textEntry(self, "~", "~");
-}
-
-function toggleLink(self) {
-    if (!self) {return}
-    return textEntry(self, "[text](url)", "");
-}
-
-function toggleQuote(self) {
-    if (!self) {return}
-    return textEntry(self, ">", "");
-}
-
-function toggleHorizon(self) {
-    if (!self) {return}
-    return textEntry(self, "---", "");
-}
-
-function toggleUnorderedList(self) {
-    if (!self) {return}
-    return textEntry(self, "- ", "");
-}
-
-function toggleOrderedList(self) {
-    if (!self) {return}
-    return textEntry(self, "1. ", "");
-}
-
-function toggleTable(self) {
-    if (!self) { return }
-    var text = "| head | head | head |\n|:---:|:---:|:---:|\n| body | body | body |\n";
-    return textEntry(self, text, "");
-}
-
-function toggleImage(self) {
-    if (!self) { return }
-    return textEntry(self, "![text](url)", "")
-}
-
-function toggleCode(self) {
-    if (!self) {return}
-    return textEntry(self, "`", "`");
-}
-
-function toggleCodeBlock(self) {
-    if (!self) {return}
-    return textEntry(self, "```\n", "\n```");
-}
-
-function toggleSideBySide (self) {
-    if (!self) {
-        return
-    }
-    var editor = self.editor;
-    var elem = document.querySelector("#" + editor.id + " .edit-block");
-    if (elem.className.indexOf("side") > -1) {
-        return
-    }
-    elem.className = "edit-block side";
-    elem = document.querySelector("#" + editor.id + " .preview-block");
-    elem.className = "preview-block side";
-
-    document.querySelector("#" + editor.id + " .mode").textContent = "sidebyside";
-    
-}
-
-function toggleEditor(self) {
-    if (!self) {
-        return
-    }
-    var editor = self.editor;
-    var elem = document.querySelector("#" + editor.id + " .edit-block");
-    if(elem.className.indexOf("only") > -1) {
-        return
-    }
-    elem.className = "edit-block only";
-    elem = document.querySelector("#" + editor.id + " .preview-block");
-    elem.className = "preview-block";
-    document.querySelector("#" + editor.id + " .mode").textContent = "edit";
-}
-
-function togglePreview (self) {
-    if (!self) {
-        return
-    }
-    var editor = self.editor;
-    var elem = document.querySelector("#" + editor.id + " .preview-block");
-    if(elem.className.indexOf("only") > -1) {
-        return
-    }
-    elem.className = "preview-block only";
-    elem = document.querySelector("#" + editor.id + " .edit-block");
-    elem.className = "edit-block";
-
-    document.querySelector("#" + editor.id + " .mode").textContent = "preview";
-}
-
-function toggleScrollSyncro (self) {
-    if (!self) { return }
-    var editor = self.editor;
-    var elem = document.querySelector("#" + editor.id + " .editor");
-    if(elem.className.indexOf("syncscroll") > -1) {
-        return;
-    }
-    elem.className = "editor syncscroll";
-    elem = document.querySelector("#" + editor.id + " .preview");
-    elem.className = "preview syncscroll";
-    syncscroll.reset();
-
-    document.querySelector("#" + editor.id + " .scroll").textContent = "syncro";
-}
-
-function toggleScrollSeparate (self) {
-    if (!self) { return }
-    var editor = self.editor;
-    var elem = document.querySelector("#" + editor.id + " .editor");
-    if(elem.className.indexOf("syncscroll") <= -1) {
-        return;
-    }
-    elem.className = "editor";
-    elem = document.querySelector("#" + editor.id + " .preview");
-    elem.className = "preview";
-    syncscroll.reset();
-
-    document.querySelector("#" + editor.id + " .scroll").textContent = "separate";
-}
-
 // TODO: getBody, setBody?
 
 // editor
@@ -325,7 +314,7 @@ PamEditor.prototype.setOptions = function () {
     if (!this.options.status) {
         this.options.status = defaultOptions.status;
     }
-    this.options.status.map(status => {
+    this.options.status.forEach(status => {
         document.querySelector("#" + this.editor.id + " ." + status).style.display = "inline-block";
     });
 
@@ -365,18 +354,17 @@ PamEditor.prototype.createToolbar = function () {
     if(this.options.tools) {
         tools = this.options.tools;
     }
-
-    var self = this;
-
     // toolbarの生成
     var toolbar = document.createElement("div");
     toolbar.className = "PamEditor-toolbar";
-    tools.map(tool => {
-            if (tool === "|") {
-            var elem = document.createElement("span");
+    var self = this;
+    tools.forEach(tool => {
+        var elem
+        if (tool === "|") {
+            elem = document.createElement("span");
             elem.innerHTML = tool;
         } else {
-            var elem = document.createElement("button");
+            elem = document.createElement("button");
             elem.onclick = function(){toolset[tool].action(self);};
             elem.innerHTML = '<i class="' + toolset[tool].className + '"></i>';
         }
@@ -427,21 +415,22 @@ PamEditor.prototype.createPreviewBlock = function () {
 };
 
 PamEditor.prototype.createStatus = function () {
-    const st = {
-        mode: "sidebyside",
-        scroll: "syncro",
-    };
+    const st = [
+        { label: "mode", status: "sidebyside" },
+        { label: "scroll", status: "syncro" },
+    ];
     
     // create statusbar
     var statusbar = document.createElement("div");
     statusbar.className = "PamEditor-status";
 
-    for (let[key, value] of Object.entries(st)){
+    st.forEach(item => {
         var elem = document.createElement("span");
-        elem.className = key;
-        elem.innerHTML = value;
+        elem.className = item.label;
+        elem.innerHTML = item.status;
         statusbar.appendChild(elem);
-    }
+    })
+    
     return statusbar;
 };
 
@@ -456,7 +445,6 @@ PamEditor.prototype.initMarkdown = function() {
             smartLists: true,
             smartypants: false,
             xhtml: false,
-            gfm: true,
             tables: true,
             highlight: function(code, lang) {
                 return window.hljs.highlightAuto(code).value;
@@ -484,6 +472,5 @@ PamEditor.prototype.getMarkdownText = function() {
 PamEditor.prototype.getHtmlText = function() {
     return marked(this.getMarkdownText());
 }
-
 
 module.exports = PamEditor;
