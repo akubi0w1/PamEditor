@@ -10,3 +10,7 @@ index.html
 
 ensime-langserver.log
 pc.stdout.log
+
+# test
+
+coverage/
